@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    {% block header %}
+        <title>Foodfy</title>
+    {% endblock %}
+    {% include './parts/styles.njk' %}
+</head>
+<body>
+    <div class="layout-page-container">
+        {% include './parts/header.njk' %}
+        
+        {% block content %}
+        {% endblock %}
+    </div>
+
+    {% include './parts/footer.njk' %}
+</body>
+</html>

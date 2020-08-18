@@ -1,0 +1,13 @@
+.about-item h1,
+.about-item h2 {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.about-item p + p {
+    margin-top: 20px;
+}
+
+.about-item:last-child {
+    margin-bottom: 50px;
+}

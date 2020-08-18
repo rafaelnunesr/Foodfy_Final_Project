@@ -1,0 +1,32 @@
+{% extends 'layout.njk' %}
+
+{% block header %}{% endblock %}
+
+{% block content %}
+    <div class="welcome-banner">
+        <div class="welcome-message">
+            <h1>As melhores receitas</h1>
+            <p>
+                Aprenda a construir os melhores pratos com receitas criadas por profissionais do mundo inteiro.
+            </p>
+        </div>
+
+        <div class="welcome-img">
+            <img src="assets/chef.png" alt="Image de Chef">
+        </div>
+    </div>
+
+    <main>
+        <div class="title">
+            <h1>Últimas receitas</h1>
+        </div>
+        <div class="main-recipes">
+            {% include 'recipe.njk' %}
+            {% include 'recipe.njk' %}
+            {% include 'recipe.njk' %}
+            {% include 'recipe.njk' %}
+            {% include 'recipe.njk' %}
+            {% include 'recipe.njk' %}
+        </div>
+    </main>
+{% endblock %}

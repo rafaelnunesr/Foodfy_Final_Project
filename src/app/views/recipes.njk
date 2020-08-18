@@ -1,0 +1,24 @@
+{% extends 'layout.njk' %}
+
+{% block header %}
+{% endblock %}
+
+{% block content %}
+    <main>
+        <div class="main-recipes">
+            {% include 'recipe.njk' %}
+            {% include 'recipe.njk' %}
+            {% include 'recipe.njk' %}
+            {% include 'recipe.njk' %}
+            {% include 'recipe.njk' %}
+            {% include 'recipe.njk' %}
+            {% include 'recipe.njk' %}
+            {% include 'recipe.njk' %}
+            {% include 'recipe.njk' %}
+            {% include 'recipe.njk' %}
+            {% include 'recipe.njk' %}
+            {% include 'recipe.njk' %}
+        </div>
+    </main>
+    {% include './parts/pagination.njk' %}
+{% endblock %}
