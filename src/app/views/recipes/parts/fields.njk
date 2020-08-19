@@ -7,14 +7,23 @@
 
     <div class="ingredients">
         <h3>Ingredientes</h3>
-        <input type="text">
-        <button class="add-new-field">Adicionar novo ingrediente</button>
+        <input 
+            type="text"
+            name='ingredients'>
+        <button
+            type='button' 
+            class='add-new-field'
+            onclick="AddNewInputField.apply('addIngredient')">Adicionar novo ingrediente
+        </button>
     </div>
 
     <div class="preparation">
         <h3>Modo de preparo</h3>
         <input type="text">
-        <button class="add-new-field">Adicionar novo passo</button>
+        <button
+            type='button'
+            class="add-new-field"
+            onclick="AddNewInputField.apply('addPreparation')">Adicionar novo passo</button>
     </div>
 
     <div class="aditional-info">

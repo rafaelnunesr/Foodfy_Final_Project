@@ -1,0 +1,18 @@
+{% extends '../layout.njk' %}
+
+{% import '../parts/creation-card.njk' as card %}
+
+{% block header %}
+    <title>Foodfy | Receitas</title>
+{% endblock %}
+
+{% block content %}
+
+    {% call card.render({ 
+        'title': 'Receita: Tripo Bacon Burger'
+    }) %}
+        {% include './parts/recipe.njk' %}
+    {% endcall %}
+
+    {% include './parts/scripts.njk' %}
+{% endblock %}

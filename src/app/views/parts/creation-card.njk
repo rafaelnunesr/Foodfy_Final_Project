@@ -9,7 +9,9 @@
                         <button class="delete-button">{{props.buttonDelete}}</button>
                 {% endif %}
 
-                <button>{{props.buttonSave}}</button>
+                {% if props.buttonSave %}
+                    <button>{{props.buttonSave}}</button>
+                {% endif %}
             </div>
 
         </div>

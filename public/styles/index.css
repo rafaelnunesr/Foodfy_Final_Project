@@ -102,6 +102,10 @@ input::placeholder {
     color: var(--color-text-third);
 }
 
+textarea {
+    resize: none;
+}
+
 button {
     background: var(--color-button-primary);
     border-radius: 4px;
