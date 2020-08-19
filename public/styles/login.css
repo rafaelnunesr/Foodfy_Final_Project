@@ -1,0 +1,42 @@
+.login-logo {
+    margin: 0 auto;
+    margin-top: 35px;
+    width: 94px;
+}
+
+.login-container {
+    max-width: 500px;
+    margin: 0 auto;
+    align-items: center;
+    margin-top: 146px;
+}
+
+.login-container h1 {
+    text-align: center;
+}
+
+.login-container div {
+    margin-top: 35px;
+}
+
+.login-container h3 {
+    margin-bottom: 10px;
+}
+
+.login-container input + h3 {
+    margin-top: 35px;
+}
+
+.login-container input {
+    width: 100%;
+    padding: 8px 16px;
+}
+
+.login-footer {
+    display: flex;
+    justify-content: space-between;
+}
+
+.forgot-password {
+    text-align: right;
+}

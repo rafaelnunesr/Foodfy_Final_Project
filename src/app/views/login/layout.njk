@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    {% block header %}
+        <title>Foodfy | Login</title>
+    {% endblock %}
+</head>
+<body>
+    {% include './login-styles.njk' %}
+
+    <div class="login-logo">
+        <a href="/">
+            <img src="assets/logo.png" alt="Logo do Foodfy">
+        </a>
+    </div>
+
+    {% block content %}
+    {% endblock %}
+    
+    {% include './login-scripts.njk' %}
+</body>
+</html>

@@ -1,0 +1,45 @@
+.admin-header {
+    margin-top: 0;
+    width: 100%;
+    height: 80px;
+
+    background: var(--color-text-primary);
+
+    display: flex;
+}
+
+.admin-header nav {
+    width: 90%; 
+    max-width: 940px;
+    margin: 0 auto; 
+
+    position: relative;
+}
+
+.admin-header nav .logo {
+    position: absolute;
+    left: 0;
+    margin-right: 50px;
+}
+
+.admin-header nav .links {
+    position: absolute;
+    left: 0;
+
+    display: flex;
+}
+
+.admin-header nav a {
+    color: var(--color-text-third);
+    text-transform: uppercase;
+
+    transition: color 200ms;
+}
+
+.admin-header nav a:hover {
+    color: #FFFFFF;
+}
+
+.admin-header nav .links a:last-child {
+    justify-content: right;
+}
