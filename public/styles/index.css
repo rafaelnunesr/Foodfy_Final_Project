@@ -7,7 +7,10 @@
     --color-input-outline: #DDDDDD;
 
     --color-button-primary: #6558C3;
-    --color-button-secondary: #4c40a8;
+    --color-button-secondary: #4C40A8;
+
+    --color-delete-button-primary: #DC4747;
+    --color-delete-button-secondary: #Af3030;
 
     --color-footer: #EEEEEE;
     --color-salmon: #FBDFDB;
@@ -82,13 +85,16 @@ header nav .links a + a {
 
 header .search-container input {
     margin-right: 8px;
+    width: 230px;
+    padding: 4px 8px;
 }
 
-input {
+input,
+textarea {
     border: 1px solid var(--color-input-outline);
-    padding: 4px 8px;
+    padding: 8px;
     border-radius: 4px;
-    width: 230px;
+    width: 100%;
 }
 
 input::placeholder {
@@ -108,6 +114,14 @@ button {
 
 button:hover {
     background-color: var(--color-button-secondary);
+}
+
+.delete-button {
+    background: var(--color-delete-button-primary);
+}
+
+.delete-button:hover {
+    background: var(--color-delete-button-secondary);
 }
 
 a {

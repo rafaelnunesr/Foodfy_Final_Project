@@ -1,0 +1,22 @@
+{% macro render(props) %}
+    <section class='creation-card'>
+
+        <div class="creation-edit-header">
+            <h1>{{props.title}}</h1>
+
+            <div class="buttons-container">
+                {% if props.buttonDelete %}
+                        <button class="delete-button">{{props.buttonDelete}}</button>
+                {% endif %}
+
+                <button>{{props.buttonSave}}</button>
+            </div>
+
+        </div>
+
+        <div class="creation-card-container">
+            {{ caller() }}
+        </div>
+
+    </section>
+{% endmacro %}

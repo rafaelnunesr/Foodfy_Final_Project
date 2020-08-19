@@ -8,9 +8,10 @@
 </head>
 <body>
     {% include './parts/header.njk' %}
-
-    {% block content %}
-    {% endblock %}
     
+    <div class="layout-page-container">
+        {% block content %}
+        {% endblock %}
+    </div>
 </body>
 </html>

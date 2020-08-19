@@ -1,0 +1,20 @@
+{% extends '../admin/layout.njk' %}
+
+{% import '../parts/creation-card.njk' as card %}
+
+{% block header %}
+    <title>Foodfy | Editar receita</title>
+{% endblock %}
+
+{% block content %}
+    <form action='' method='POST'>
+        {% call card.render({ 
+            'title': 'Editando receita', 
+            'buttonSave': 'Salvar receita',
+            'buttonDelete': 'Deletar'
+        }) %}
+            {% include './parts/fields.njk' %} 
+        {% endcall %}
+    </form>
+
+{% endblock %}
