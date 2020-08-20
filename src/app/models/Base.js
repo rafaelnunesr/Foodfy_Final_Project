@@ -34,7 +34,7 @@ const Base = {
                 values.push(`'${fields[key]}'`)
             })
 
-            const query = `INSERT INTO ${this.table} (${keys.join(',')})
+            const query = `INSERT INTO ${this.table}_with_deleted (${keys.join(',')})
                            VALUES (${values.join(',')})
                            RETURNING id`
 
@@ -54,7 +54,7 @@ const Base = {
                 update.push(line)
             })
 
-            let query = `UPDATE ${this.table} SET
+            let query = `UPDATE ${this.table}_with_deleted SET
                          ${update.join(',')} WHERE id = ${id}`
 
             return db.query(query)
@@ -66,7 +66,7 @@ const Base = {
     delete(id) {
         try {
 
-            return db.query(`DELETE FROM ${this.table} WHERE id = ${id}`)
+            return db.query(`DELETE FROM ${this.table}_with_deleted WHERE id = ${id}`)
 
         } catch (error) {
             console.error(error)

@@ -76,6 +76,7 @@ CREATE TABLE "profile_files_with_deleted" (
   "id" SERIAL PRIMARY KEY,
   "chef_id" int,
   "user_id" int,
+  "file_id" int,
   "created_at" timestamp DEFAULT (now()),
   "updated_at" timestamp DEFAULT (now()),
   "deleted_at" timestamp
@@ -201,6 +202,9 @@ BEFORE UPDATE ON orders
 FOR EACH ROW
 EXECUTE PROCEDURE trigger_set_timestamp();
 
+ -- FOREIGN KEYS
+ALTER TABLE "orders" ADD FOREIGN KEY ("recipe_id") REFERENCES "recipes_with_deleted" ("id");
+
 -- ================================== 
 --        TABLE SESSION
 -- ==================================
@@ -214,23 +218,70 @@ CREATE TABLE "session" (
   WITH(OIDS=FALSE);
   ALTER TABLE "session" ADD CONSTRAINT "session_pkey" PRIMARY KEY ("sid") NOT DEFERRABLE INITIALLY IMMEDIATE;
 
--- ================================== 
---        TABLE SESSION
+  -- ================================== 
+--        SEEDS SETUP
 -- ==================================
 
+  -- RESET TABLES TO RUN SEEDS
+DELETE FROM chefs_with_deleted;
+DELETE FROM users_with_deleted;
+DELETE FROM profile_files_with_deleted;
+DELETE FROM recipes_with_deleted;
+DELETE FROM recipe_files_with_deleted;
+DELETE FROM files_with_deleted;
+DELETE FROM orders;
+
+  -- RESTART SEQUENCE AUTO-INCREMENT FROM TABLES IDS
+ALTER SEQUENCE chefs_with_deleted_id_seq RESTART WITH 1;
+ALTER SEQUENCE users_with_deleted_id_seq RESTART WITH 1;
+ALTER SEQUENCE profile_files_with_deleted_id_seq RESTART WITH 1;
+ALTER SEQUENCE recipes_with_deleted_id_seq RESTART WITH 1;
+ALTER SEQUENCE recipe_files_with_deleted_id_seq RESTART WITH 1;
+ALTER SEQUENCE files_with_deleted_id_seq RESTART WITH 1;
+ALTER SEQUENCE orders_id_seq RESTART WITH 1;
 
 -- ================================== 
 --        SOFT DELETE
 -- ==================================
 
+ -- TABLE CHEFS
+CREATE OR REPLACE RULE delete_chefs AS
+ON DELETE TO chefs_with_deleted DO INSTEAD
+UPDATE chefs_with_deleted
+SET deleted_at = now()
+WHERE chefs_with_deleted.id = old.id;
+
+ -- TABLE USERS
+CREATE OR REPLACE RULE delete_users AS
+ON DELETE TO users_with_deleted DO INSTEAD
+UPDATE users_with_deleted
+SET deleted_at = now()
+WHERE users_with_deleted.id = old.id;
+
+ -- TABLE PROFILE FILES
+CREATE OR REPLACE RULE delete_profile_files AS
+ON DELETE TO profile_files_with_deleted DO INSTEAD
+UPDATE profile_files_with_deleted
+SET deleted_at = now()
+WHERE profile_files_with_deleted.id = old.id;
+
+ -- TABLE RECIPES
 CREATE OR REPLACE RULE delete_recipes AS
 ON DELETE TO recipes_with_deleted DO INSTEAD
 UPDATE recipes_with_deleted
 SET deleted_at = now()
 WHERE recipes_with_deleted.id = old.id;
 
-CREATE OR REPLACE RULE delete_recipes AS
-ON DELETE TO recipes_with_deleted DO INSTEAD
-UPDATE recipes_with_deleted
+  -- TABLE RECIPE FILES
+CREATE OR REPLACE RULE delete_recipe_files AS
+ON DELETE TO recipe_files_with_deleted DO INSTEAD
+UPDATE recipe_files_with_deleted
 SET deleted_at = now()
-WHERE recipes_with_deleted.id = old.id;
+WHERE recipe_files_with_deleted.id = old.id;
+
+ -- TABLE FILES
+CREATE OR REPLACE RULE delete_files AS
+ON DELETE TO files_with_deleted DO INSTEAD
+UPDATE files_with_deleted
+SET deleted_at = now()
+WHERE files_with_deleted.id = old.id;
