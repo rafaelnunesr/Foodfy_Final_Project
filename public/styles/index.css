@@ -50,7 +50,6 @@ footer p {
     font-size: 14px;
 }
 
-
 .layout-page-container {
     width: 90%;
     max-width: 940px;
@@ -128,6 +127,18 @@ button:hover {
     background: var(--color-delete-button-secondary);
 }
 
+button.asLink {
+    background: none;
+    padding: 0;
+    color: var(--color-text-primary);
+
+    transition: color 200ms;
+}
+
+button.asLink:hover {
+    color: var(--color-text-secondary);
+}
+
 a {
     text-decoration: none;
     color: var(--color-text-primary);
@@ -161,6 +172,10 @@ p {
     font-size: 18px;
     line-height: 28px;
     color: var(--color-text-paragraph);
+}
+
+li {
+    list-style-type: none;
 }
 
 main {

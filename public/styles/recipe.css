@@ -1,0 +1,40 @@
+.recipe-header {
+    text-align: center;
+}
+
+.recipe-header h1 {
+    font-size: 36px;
+    line-height: 43px;
+}
+
+.recipe-header p {
+    font-size: 20px;
+    line-height: 24px;
+}
+
+.recipe-item-container {
+    margin-top: 41px;
+}
+
+.recipe-item-container:first-child {
+    margin-top: 31px;
+}
+
+.recipe-item-subcontainer {
+    display: flex;
+    align-items: center;
+}
+
+.recipe-item-subcontainer button {
+    margin-left: 8px;
+}
+
+.recipe-item-container ul,
+.recipe-item-container p {
+    margin-top: 19px;
+}
+
+.recipe-item-container ul li {
+    line-height: 28px;
+}
+

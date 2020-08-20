@@ -1,24 +1,74 @@
-<div class="gallery">
-    <div class="highlight">
-        {% if not files[0] %}
-            <img src="http://placeholder.it/500x500?text=PRODUTO SEM FOTO"/>
-        {% else %}
-            <img src="{{files[0].src}}" alt="{{files[0].name}}" onclick="Lightbox.open()">
-        {% endif %}
+{% include '../../parts/gallery-img.njk' %}
 
-        <div class="lightbox-target">
-            <img src="{{files[0].src}}" alt="{{files[0].name}}">
-            <a href="#" class="lightbox-close" onclick="Lightbox.close()">
-                <i class="material-icons">close</i>
-            </a>
-        </div>
+<div class="recipe-header">
+    <h1>Triplo bacon burger</h1>
+    <p>Por Jorge Triplo</p>
+</div>
 
-        <div class="gallery-small-photos">
-            <div class="gallery-preview">
-                {% for image in files %}
-                    <img src="{{image.src}}" alt="{{image.name}}" {% if loop.index0 == 0 %} class="active" {% endif %} onclick="ImageGallery.setImage(event)">
-                {% endfor %}
-            </div>
-        </div>
+<div class="recipe-item-container">
+    <div class="recipe-item-subcontainer">
+        <h3>Ingredientes</h3>
+        <button type="button" class="asLink">ESCONDER</button>
     </div>
+    <ul>
+        <li>
+            -  3 kg de carne moída (escolha uma carne magra e macia);
+        </li>
+        <li>
+            -  300 g de bacon moído;
+        </li>
+        <li>
+            -  1 ovo;
+        </li>
+        <li>
+            -  3 colheres (sopa) de farinha de trigo;
+        </li>
+        <li>
+            -  3 colheres (sopa) de tempero caseiro: feito com alho, sal, cebola, pimenta e cheiro verde processados no liquidificador;
+        </li>
+        <li>
+            -  30 ml de água gelada;
+        </li>
+    </ul>
+</div>
+
+<div class="recipe-item-container">
+    <div class="recipe-item-subcontainer">
+        <h3>Preparação</h3>
+        <button type="button" class="asLink">ESCONDER</button>
+    </div>
+    <ul>
+        <li>
+            -  3 kg de carne moída (escolha uma carne magra e macia);
+        </li>
+        <li>
+            -  300 g de bacon moído;
+        </li>
+        <li>
+            -  1 ovo;
+        </li>
+        <li>
+            -  3 colheres (sopa) de farinha de trigo;
+        </li>
+        <li>
+            -  3 colheres (sopa) de tempero caseiro: feito com alho, sal, cebola, pimenta e cheiro verde processados no liquidificador;
+        </li>
+        <li>
+            -  30 ml de água gelada;
+        </li>
+    </ul>
+</div>
+
+
+<div class="recipe-item-container">
+    <div class="recipe-item-subcontainer">
+        <h3>Informaçōes adicionais</h3>
+        <button type="button" class="asLink">ESCONDER</button>
+    </div>
+    <p>
+        Preaqueça a chapa, frigideira ou grelha por 10 minutos antes de levar os hambúrgueres. Adicione um pouquinho de óleo ou manteiga e não amasse os hambúrgueres!
+    </p>
+    <p>
+        Você sabia que a receita que precede o hambúrguer surgiu no século XIII, na Europa? A ideia de moer a carne chegou em Hamburgo no século XVII, onde um açogueiro resolveu também temperá-la. Assim, a receita foi disseminada nos Estados Unidos por alemães da região. Lá surgiu a ideia de colocar o hambúrguer no meio do pão e adicionar outros ingredientes, como queijom tomates e alface.
+    </p>
 </div>
