@@ -24,7 +24,7 @@ const Base = {
 
         return this
     },
-    create(fields) {
+    async create(fields) {
         try {
             let keys = [],
                 values = []
@@ -82,7 +82,7 @@ const Base = {
             console.error(error)
         }
     },
-    findOneWithDeleted(filters) {
+    async findOneWithDeleted(filters) {
         try {
 
             const results = await find(filters, `${this.table}_with_deleted`)
@@ -92,7 +92,7 @@ const Base = {
             console.error(error)
         }
     },
-    findAll(filters) {
+    async findAll(filters) {
         try {
 
             const results = await find(filters, this.table)

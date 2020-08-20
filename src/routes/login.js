@@ -1,14 +1,10 @@
 const express = require('express')
 const routes = express.Router()
 
-routes.get('/login', function(req, res) {
-    return res.render('login/index')
-})
-    .get('/password-recover', function(req, res) {
-        return res.render('login/password-forgot-form')
-    })
-    .get('/password-reset', function(req, res) {
-        return res.render('login/password-reset-form')
-    })
+const SessionController = require('../app/controllers/SessionController')
+
+routes.get('/login', SessionController.login)
+      .get('password-recover', SessionController.passwordRecover)
+      .get('/password-reset', SessionController.passwordReset)
 
 module.exports = routes

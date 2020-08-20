@@ -69,13 +69,13 @@ CREATE VIEW users AS
 SELECT * FROM users_with_deleted WHERE deleted_at IS NULL;
 
 -- ================================== 
---       TABLE USERS_CHEFS FILES
+--      TABLE PROFILE FILES
 -- ==================================
 
-CREATE TABLE "users_chefs_files_with_deleted" (
+CREATE TABLE "profile_files_with_deleted" (
   "id" SERIAL PRIMARY KEY,
-  "recipe_id" integer NOT NULL,
-  "file_id" integer NOT NULL,
+  "chef_id" int,
+  "user_id" int,
   "created_at" timestamp DEFAULT (now()),
   "updated_at" timestamp DEFAULT (now()),
   "deleted_at" timestamp
@@ -83,13 +83,17 @@ CREATE TABLE "users_chefs_files_with_deleted" (
 
 -- AUTO UPDATE AT USERS CHEFS FILES (COMPLETE TABLE WITH AND WITHOUT DELETED USERS CHEFS FILES)
 CREATE TRIGGER set_timestamp
-BEFORE UPDATE ON users_chefs_files_with_deleted
+BEFORE UPDATE ON profile_files_with_deleted
 FOR EACH ROW
 EXECUTE PROCEDURE trigger_set_timestamp();
 
   -- CREATE VIEW (USERS CHEFS FILES) WITHOUT DELETED USERS CHEFS FILES
-CREATE VIEW users_chefs_files AS
-SELECT * FROM users_chefs_files_with_deleted WHERE deleted_at IS NULL;
+CREATE VIEW profile_files AS
+SELECT * FROM profile_files_with_deleted WHERE deleted_at IS NULL;
+
+ -- FOREIGN KEYS
+ALTER TABLE "profile_files_with_deleted" ADD FOREIGN KEY ("chef_id") REFERENCES "chefs_with_deleted" ("id");
+ALTER TABLE "profile_files_with_deleted" ADD FOREIGN KEY ("user_id") REFERENCES "users_with_deleted" ("id");
 
 -- ================================== 
 --          TABLE RECIPES
@@ -118,12 +122,16 @@ EXECUTE PROCEDURE trigger_set_timestamp();
 CREATE VIEW recipes AS
 SELECT * FROM recipes_with_deleted WHERE deleted_at IS NULL;
 
+ -- FOREIGN KEYS
+ALTER TABLE "recipes_with_deleted" ADD FOREIGN KEY ("chef_id") REFERENCES "chefs_with_deleted" ("id");
+ALTER TABLE "recipes_with_deleted" ADD FOREIGN KEY ("user_id") REFERENCES "users_with_deleted" ("id");
+
 -- ================================== 
 --        TABLE RECIPE FILES
 -- ==================================
 
 -- CREATE TABLE RECIPE FILES (COMPLETE TABLE WITH AND WITHOUT DELETED RECIPE FILES)
-CREATE TABLE "recipes_files_with_deleted" (
+CREATE TABLE "recipe_files_with_deleted" (
   "id" SERIAL PRIMARY KEY,
   "recipe_id" integer NOT NULL,
   "file_id" integer NOT NULL,
@@ -134,13 +142,16 @@ CREATE TABLE "recipes_files_with_deleted" (
 
 -- AUTO UPDATE AT RECIPE FILES (COMPLETE TABLE WITH AND WITHOUT DELETED RECIPE FILES)
 CREATE TRIGGER set_timestamp
-BEFORE UPDATE ON recipes_files_with_deleted
+BEFORE UPDATE ON recipe_files_with_deleted
 FOR EACH ROW
 EXECUTE PROCEDURE trigger_set_timestamp();
 
   -- CREATE VIEW (RECIPE FILES) WITHOUT DELETED RECIPE FILES
-CREATE VIEW recipes_files AS
-SELECT * FROM recipes_files_with_deleted WHERE deleted_at IS NULL;
+CREATE VIEW recipe_files AS
+SELECT * FROM recipe_files_with_deleted WHERE deleted_at IS NULL;
+
+ -- FOREIGN KEYS
+ALTER TABLE "recipe_files_with_deleted" ADD FOREIGN KEY ("recipe_id") REFERENCES "recipes_with_deleted" ("id");
 
 -- ================================== 
 --        TABLE FILES
@@ -203,37 +214,23 @@ CREATE TABLE "session" (
   WITH(OIDS=FALSE);
   ALTER TABLE "session" ADD CONSTRAINT "session_pkey" PRIMARY KEY ("sid") NOT DEFERRABLE INITIALLY IMMEDIATE;
 
+-- ================================== 
+--        TABLE SESSION
+-- ==================================
 
 
+-- ================================== 
+--        SOFT DELETE
+-- ==================================
 
+CREATE OR REPLACE RULE delete_recipes AS
+ON DELETE TO recipes_with_deleted DO INSTEAD
+UPDATE recipes_with_deleted
+SET deleted_at = now()
+WHERE recipes_with_deleted.id = old.id;
 
-
-
-
-
-
-
-
-
--- CASCADE EFFECT WHEN DELETE USER, CHEF AND RECIPES
-ALTER TABLE "recipes"
-DROP CONSTRAINT recipes_user_id_fkey,
-ADD CONSTRAINT recipes_chef_id_fkey,
-DROP CONSTRAINT recipes_chef_id_fkey,
-ADD CONSTRAINT recipes_user_id_fkey
-FOREIGN KEY ("user_id")
-FOREIGN KEY ("chef_id")
-REFERENCES "users" ("id")
-REFERENCES "chefs" ("id")
-ON DELETE CASCADE;
-
-ALTER TABLE "files"
-DROP CONSTRAINT files_recipe_id_fkey,
-ADD CONSTRAINT files_recipe_id_fkey
-FOREIGN KEY ("recipe_id")
-REFERENCES "recipes" ("id")
-ON DELETE CASCADE;
-
--- 4. Renomear a nossa VIEW e a nossa TABLE
-ALTER TABLE products RENAME TO products_with_deleted;
-ALTER VIEW products_without_deleted RENAME TO products;
+CREATE OR REPLACE RULE delete_recipes AS
+ON DELETE TO recipes_with_deleted DO INSTEAD
+UPDATE recipes_with_deleted
+SET deleted_at = now()
+WHERE recipes_with_deleted.id = old.id;
