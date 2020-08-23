@@ -130,6 +130,7 @@ CREATE TABLE "recipes_with_deleted" (
   "id" SERIAL PRIMARY KEY,
   "chef_id" integer,
   "user_id" integer,
+  "name" text NOT NULL,
   "ingredients" text NOT NULL,
   "preparation" text NOT NULL,
   "information" text NOT NULL,

@@ -1,29 +1,53 @@
 <div class="creation-edition-fields">
 
+    <div class="recipe-photos-wrapper">
+        <h3>Imagem da receita</h3>
+        <div class="recipe-box-upload">
+            <input 
+                id="photos-recipe-upload" 
+                type="file" 
+                name="photos" 
+                multiple="multiple" 
+                accept="image/*" 
+                onchange="PhotosUpload.AddRecipePhoto(event)">
+            <i class="material-icons">add</i>
+        </div>
+
+        {% if files %}
+            {% for image in files %}
+                <div class="photo photo-box" id={{image.id}}>
+                    <img src="{{image.src}}" alt="{{image.name}}">
+                    <i class="material-icons" 
+                        onclick="PhotosUpload.removeOldPhoto(event)">close</i>
+                </div>
+            {% endfor %}
+            <input type="hidden" name="removed_files">
+        {% endif %}
+
+    </div>
+
     <div class="avatar">
         <h3>Chef / Usuário</h3>
-        <input type="text">
+        <select name="" id="">
+            {% for profile in profiles %}
+                <option value="{{[profile.id, profile.profileType]}}" {%if recipe.profile_id == profile.id or userLogged == profile.id%} selected="selected" {%elif profile.id == 0 %} disabled="disabled" {%endif%}>
+                    {{profile.name}}
+                </option>
+            {% endfor %}
+        </select>
     </div>
 
     <div class="ingredients">
         <h3>Ingredientes</h3>
-        <input 
-            type="text"
-            name='ingredients'>
-        <button
-            type='button' 
-            class='add-new-field'
-            onclick="AddNewInputField.apply('addIngredient')">Adicionar novo ingrediente
+        <input type="text" name='ingredients'>
+        <button type='button' class='add-new-field' onclick="AddNewInputField.apply('addIngredient')">Adicionar novo ingrediente
         </button>
     </div>
 
     <div class="preparation">
         <h3>Modo de preparo</h3>
         <input type="text">
-        <button
-            type='button'
-            class="add-new-field"
-            onclick="AddNewInputField.apply('addPreparation')">Adicionar novo passo</button>
+        <button type='button' class="add-new-field" onclick="AddNewInputField.apply('addPreparation')">Adicionar novo passo</button>
     </div>
 
     <div class="aditional-info">

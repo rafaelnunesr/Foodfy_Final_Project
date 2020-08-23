@@ -89,7 +89,8 @@ header .search-container input {
 }
 
 input,
-textarea {
+textarea,
+select {
     border: 1px solid var(--color-input-outline);
     padding: 8px;
     border-radius: 4px;

@@ -8,9 +8,26 @@ module.exports = {
             const users = await Users.findAll()
             const chefs = await Chefs.findAll()
 
-            console.log(users)
+            let profiles = [{name: 'USERS', id: 0}]
+            users.map(user => {
+                profiles.push({
+                    id: user.id,
+                    name: user.name,
+                    profileType: 'user'
+                })
+            })
 
-            return res.render('recipes/create')
+            profiles.push({name: 'CHEFS', id: 0})
+            chefs.map(chef => {
+                profiles.push({
+                    id: chef.id,
+                    name: chef.name,
+                    profileType: 'chef'
+                })
+            })
+
+            return res.render('recipes/create', { profiles })
+
         } catch (error) {
             console.error(error)
         }

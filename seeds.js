@@ -7,13 +7,15 @@ const ProfileFiles = require('./src/app/models/ProfileFiles')
 const Recipes = require('./src/app/models/Recipes')
 const RecipeFiles = require('./src/app/models/RecipeFiles')
 const Files = require('./src/app/models/Files')
-const { findAll } = require('./src/app/models/Users')
 
 const totalProfilesCreated = 10
-const totalRecipesPhotos = 5
 
 function generateNames() {
     return faker.name.firstName().concat(' ', faker.name.lastName())
+}
+
+function generateRandomNumber(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
 function createIngredientsAndPreparation() {
@@ -63,7 +65,7 @@ async function createUsers () {
             })
         }
     
-        const UsersPromise = users.map(user => Users.create(user))
+        const UsersPromise = users.map(chef => Users.create(chef))
         await Promise.all(UsersPromise)
 
     } catch (error) {
@@ -86,117 +88,44 @@ async function createFiles(fileName, filePath) {
     }
 }
 
-async function createFileProfilesForUsers() {
-    const profiles = []
+async function createProfileFilesForUsers() {
+
     try {
         const users = await Users.findAll()
 
         users.map(async user => {
             const file_id = await createFiles(user.name, 'public/img/profiles/user_default.jpeg')
             
-            profiles.push({
-                user_id: user.id,
+            const profile = {
+                chef_id: user.id,
                 file_id
-            })
+            }
+
+            await ProfileFiles.create(profile)
         })
 
-        const userProfileFiles = await profiles.map(profile => {
-            ProfileFiles.create(profile)
-        })
-        await Promise.all(userProfileFiles)
 
     } catch (error) {
         console.error(error)
     }
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-async function createProfileFiles(params) {
-    try {
-        let profile = {
-            file_id: params.file_id
-        }
-
-        if(params.chef_id){
-            profile.chef_id = params.chef_id
-        }
-        else if (params.user_id) {
-            profile.user_id = params.user_id
-        }
-
-        await ProfileFiles.create(profile)
-
-    } catch (error) {
-        console.error(error)
-    }
-}
-
-async function createFilesForChefs() {
+async function createProfileFilesForChefs() {
 
     try {
-
         const chefs = await Chefs.findAll()
-        
-        const chefsFilesPromise = chefs.map(async chef => {
-            const fileId = await Files.create({
-                name: chef.name,
-                path: 'public/img/profiles/chef_default.jpeg'
-            })
 
-            await createProfileFiles({
+        chefs.map(async chef => {
+            const file_id = await createFiles(chef.name, 'public/img/profiles/chef_default.jpeg')
+            
+            const profile = {
                 chef_id: chef.id,
-                file_id: fileId
-            })
+                file_id
+            }
 
-        })   
+            await ProfileFiles.create(profile)
+        })
 
-        await Promise.all(chefsFilesPromise)
-
-    } catch (error) {
-        console.error(error)
-    }
-}
-
-async function createFilesForUsers() {
-
-    try {
-
-        const users = await Users.findAll()
-        
-        const usersFilesPromise = users.map(async user => {
-            const fileId = await Files.create({
-                name: user.name,
-                path: 'public/img/profiles/user_default.jpeg'
-            })
-
-            await createProfileFiles({
-                user_id: user.id,
-                file_id: fileId
-            })
-
-        })   
-
-        await Promise.all(usersFilesPromise)
 
     } catch (error) {
         console.error(error)
@@ -207,67 +136,98 @@ async function createRecipesForUsers() {
     try {
         const users = await Users.findAll()
 
-        const usersRecipesPromise = users.map(async user => {
-            const fileId = await Files.create({
-                name: user.name,
-                path: 'public/img/profiles/user_default.jpeg'
-            })
+        users.map(async user => {
 
-            await createProfileFiles({
-                user_id: user.id,
-                file_id: fileId
-            })
+            // Qtt recipes for this user
+            const recipeQuantity = generateRandomNumber(0, 10)
 
-        })   
+            for(let index = 0; index < recipeQuantity; index++){
+                const recipeName = await faker.name.title()
 
-        await Promise.all(usersFilesPromise)
+                const recipeId = await Recipes.create({
 
-        
+                    user_id: user.id,
+                    name: recipeName,
+                    ingredients: createIngredientsAndPreparation(),
+                    preparation: createIngredientsAndPreparation(),
+                    information: await faker.lorem.paragraph(Math.ceil(Math.random() * 10))
+
+                })
+
+                const photosQuantity = generateRandomNumber(1, 5) + 1
+
+                for(let i = 1; i < photosQuantity; i++){
+
+                    const fileId = await createFiles(recipeName, `public/img/recipes/recipe_default_0${i}`)
+
+                    await RecipeFiles.create({
+
+                        recipe_id: recipeId,
+                        file_id: fileId
+                    })
+                }
+                
+            }
+        })
+
     } catch (error) {
         console.error(error)
     }
 }
 
-async function createRecipes() {
-    const recipes = {
-        chefs: [],
-        users: []
-    }
-
+async function createRecipesForChefs() {
     try {
-        
-        const users = await Users.findAll()
         const chefs = await Chefs.findAll()
 
-        users.map(user => {
-            recipes.users.push({
-                user_id: user.id,
-                ingredients: createIngredientsAndPreparation(),
-                preparation: createIngredientsAndPreparation(),
-                information: faker.lorem.paragraph(Math.ceil(Math.random() * 10))
-            })
+        chefs.map(async chef => {
+
+            // Qtt recipes for this user
+            const recipeQuantity = generateRandomNumber(0, 10)
+
+            for(let index = 0; index < recipeQuantity; index++){
+                const recipeName = await faker.name.title()
+
+                const recipeId = await Recipes.create({
+
+                    chef_id: chef.id,
+                    name: recipeName,
+                    ingredients: createIngredientsAndPreparation(),
+                    preparation: createIngredientsAndPreparation(),
+                    information: await faker.lorem.paragraph(Math.ceil(Math.random() * 10))
+
+                })
+
+                const photosQuantity = generateRandomNumber(1, 5) + 1
+
+                for(let i = 1; i < photosQuantity; i++){
+
+                    const fileId = await createFiles(recipeName, `public/img/recipes/recipe_default_0${i}`)
+
+                    await RecipeFiles.create({
+
+                        recipe_id: recipeId,
+                        file_id: fileId
+                    })
+                }
+                
+            }
         })
-
-        chefs.map(chef => {
-            recipes.chefs.push({
-                chef_id: chef.id,
-                ingredients: createIngredientsAndPreparation(),
-                preparation: createIngredientsAndPreparation(),
-                information: faker.lorem.paragraph(Math.ceil(Math.random() * 10))
-            })
-        })
-
-
 
     } catch (error) {
         console.error(error)
     }
 }
+
 
 async function init() {
     await createChefs()
     await createUsers()
-    await createFileProfilesForUsers()
+
+    await createProfileFilesForUsers()
+    await createProfileFilesForChefs()
+
+    await createRecipesForUsers()
+    await createRecipesForChefs()
 }   
 
 init()
