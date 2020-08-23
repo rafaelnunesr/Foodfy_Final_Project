@@ -7,21 +7,34 @@ const ProfileFiles = require('./src/app/models/ProfileFiles')
 const Recipes = require('./src/app/models/Recipes')
 const RecipeFiles = require('./src/app/models/RecipeFiles')
 const Files = require('./src/app/models/Files')
+const { findAll } = require('./src/app/models/Users')
 
 const totalProfilesCreated = 10
 const totalRecipesPhotos = 5
 
-function generateName() {
+function generateNames() {
     return faker.name.firstName().concat(' ', faker.name.lastName())
 }
 
-async function createChefs () {
+function createIngredientsAndPreparation() {
+    const quantity = Math.floor(Math.random() * 5) + 1
+
+    let stringsWithCommas = ''
+
+    for(let index = 0; index < quantity; index++) {
+        stringsWithCommas += faker.name.title() + ','
+    }
+
+    return stringsWithCommas
+}
+
+async function createChefs() {
     const chefs = []
 
     try {
         while (chefs.length < totalProfilesCreated) {
             chefs.push({
-                name: generateName()
+                name: generateNames()
             })
         }
     
@@ -34,32 +47,6 @@ async function createChefs () {
     }
 }
 
-async function createChefsProfileFiles() {
-    const chefsProfileFiles = []
-    const chefsIds = []
-
-    try {
-        let chefs = await Chefs.findAll()
-
-        chefs.map(chef => {
-            chefsIds.push(chef.id)
-        })   
-
-        chefsIds.map(chef_id => {
-            chefsProfileFiles.push({
-                chef_id
-            })
-        })
-
-         const chefsProfilePromise = chefsProfileFiles.map(chef_id => ProfileFiles.create(chef_id))
-         
-         await Promise.all(chefsProfilePromise)
-        
-    } catch (error) {
-        console.error(error)
-    }  
-}
-
 async function createUsers () {
     const users = []
 
@@ -67,15 +54,16 @@ async function createUsers () {
 
         while(users.length < totalProfilesCreated) {
             users.push({
-                name: generateName(),
+
+                name: generateNames(),
                 is_admin: Math.round(Math.random()) ? true : false,
                 email: faker.internet.email().toLowerCase(),
                 password: await hash('1111', 8)
+
             })
         }
     
         const UsersPromise = users.map(user => Users.create(user))
-    
         await Promise.all(UsersPromise)
 
     } catch (error) {
@@ -83,56 +71,39 @@ async function createUsers () {
     }
 }
 
-async function createUsersProfileFiles() {
-    const usersProfileFiles = []
-    const usersIds = []
-
+async function createFiles(fileName, filePath) {
     try {
 
-        let users = await Users.findAll()
-
-        users.map(user => {
-            usersIds.push(user.id)
+        const fileId = await Files.create({
+            name: fileName,
+            path: filePath
         })
 
-        usersIds.map(user_id => {
-            usersProfileFiles.push({
-                user_id
-            })
-        })
+        return fileId
 
-         const usersProfilePromise = usersProfileFiles.map(user_id => ProfileFiles.create(user_id))
-         
-         await Promise.all(usersProfilePromise)
-        
     } catch (error) {
         console.error(error)
-    }  
+    }
 }
 
-async function createFilesForProfiles() {
-    const profileFiles = []
-
+async function createFileProfilesForUsers() {
+    const profiles = []
     try {
-        const chefs = await Chefs.findAll()
         const users = await Users.findAll()
 
-        chefs.map(chef => {
-            profileFiles.push({
-                name: chef.name,
-                path: 'public/img/profiles/chef_default.jpeg'
+        users.map(async user => {
+            const file_id = await createFiles(user.name, 'public/img/profiles/user_default.jpeg')
+            
+            profiles.push({
+                user_id: user.id,
+                file_id
             })
         })
 
-        users.map(user => {
-            profileFiles.push({
-                name: user.name,
-                path: 'public/img/profiles/user_default.jpeg'
-            })
+        const userProfileFiles = await profiles.map(profile => {
+            ProfileFiles.create(profile)
         })
-
-        const ProfileFilesPromise = profileFiles.map(profile => Files.create(profile))
-        await Promise.all(ProfileFilesPromise)
+        await Promise.all(userProfileFiles)
 
     } catch (error) {
         console.error(error)
@@ -140,12 +111,163 @@ async function createFilesForProfiles() {
 }
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+async function createProfileFiles(params) {
+    try {
+        let profile = {
+            file_id: params.file_id
+        }
+
+        if(params.chef_id){
+            profile.chef_id = params.chef_id
+        }
+        else if (params.user_id) {
+            profile.user_id = params.user_id
+        }
+
+        await ProfileFiles.create(profile)
+
+    } catch (error) {
+        console.error(error)
+    }
+}
+
+async function createFilesForChefs() {
+
+    try {
+
+        const chefs = await Chefs.findAll()
+        
+        const chefsFilesPromise = chefs.map(async chef => {
+            const fileId = await Files.create({
+                name: chef.name,
+                path: 'public/img/profiles/chef_default.jpeg'
+            })
+
+            await createProfileFiles({
+                chef_id: chef.id,
+                file_id: fileId
+            })
+
+        })   
+
+        await Promise.all(chefsFilesPromise)
+
+    } catch (error) {
+        console.error(error)
+    }
+}
+
+async function createFilesForUsers() {
+
+    try {
+
+        const users = await Users.findAll()
+        
+        const usersFilesPromise = users.map(async user => {
+            const fileId = await Files.create({
+                name: user.name,
+                path: 'public/img/profiles/user_default.jpeg'
+            })
+
+            await createProfileFiles({
+                user_id: user.id,
+                file_id: fileId
+            })
+
+        })   
+
+        await Promise.all(usersFilesPromise)
+
+    } catch (error) {
+        console.error(error)
+    }
+}
+
+async function createRecipesForUsers() {
+    try {
+        const users = await Users.findAll()
+
+        const usersRecipesPromise = users.map(async user => {
+            const fileId = await Files.create({
+                name: user.name,
+                path: 'public/img/profiles/user_default.jpeg'
+            })
+
+            await createProfileFiles({
+                user_id: user.id,
+                file_id: fileId
+            })
+
+        })   
+
+        await Promise.all(usersFilesPromise)
+
+        
+    } catch (error) {
+        console.error(error)
+    }
+}
+
+async function createRecipes() {
+    const recipes = {
+        chefs: [],
+        users: []
+    }
+
+    try {
+        
+        const users = await Users.findAll()
+        const chefs = await Chefs.findAll()
+
+        users.map(user => {
+            recipes.users.push({
+                user_id: user.id,
+                ingredients: createIngredientsAndPreparation(),
+                preparation: createIngredientsAndPreparation(),
+                information: faker.lorem.paragraph(Math.ceil(Math.random() * 10))
+            })
+        })
+
+        chefs.map(chef => {
+            recipes.chefs.push({
+                chef_id: chef.id,
+                ingredients: createIngredientsAndPreparation(),
+                preparation: createIngredientsAndPreparation(),
+                information: faker.lorem.paragraph(Math.ceil(Math.random() * 10))
+            })
+        })
+
+
+
+    } catch (error) {
+        console.error(error)
+    }
+}
+
 async function init() {
     await createChefs()
-    await createChefsProfileFiles()
     await createUsers()
-    await createUsersProfileFiles()
-    //await createFilesForProfiles()
-}
+    await createFileProfilesForUsers()
+}   
 
 init()

@@ -69,6 +69,30 @@ CREATE VIEW users AS
 SELECT * FROM users_with_deleted WHERE deleted_at IS NULL;
 
 -- ================================== 
+--        TABLE FILES
+-- ==================================
+
+-- CREATE TABLE FILES (COMPLETE TABLE WITH AND WITHOUT DELETED FILES)
+CREATE TABLE "files_with_deleted" (
+  "id" SERIAL PRIMARY KEY,
+  "name" text NOT NULL,
+  "path" text NOT NULL,
+  "created_at" timestamp DEFAULT (now()),
+  "updated_at" timestamp DEFAULT (now()),
+  "deleted_at" timestamp
+);
+
+-- AUTO UPDATE AT FILES (COMPLETE TABLE WITH AND WITHOUT DELETED FILES)
+CREATE TRIGGER set_timestamp
+BEFORE UPDATE ON files_with_deleted
+FOR EACH ROW
+EXECUTE PROCEDURE trigger_set_timestamp();
+
+  -- CREATE VIEW (RECIPE FILES) WITHOUT DELETED RECIPE FILES
+CREATE VIEW files AS
+SELECT * FROM files_with_deleted WHERE deleted_at IS NULL;
+
+-- ================================== 
 --      TABLE PROFILE FILES
 -- ==================================
 
@@ -95,6 +119,7 @@ SELECT * FROM profile_files_with_deleted WHERE deleted_at IS NULL;
  -- FOREIGN KEYS
 ALTER TABLE "profile_files_with_deleted" ADD FOREIGN KEY ("chef_id") REFERENCES "chefs_with_deleted" ("id");
 ALTER TABLE "profile_files_with_deleted" ADD FOREIGN KEY ("user_id") REFERENCES "users_with_deleted" ("id");
+ALTER TABLE "profile_files_with_deleted" ADD FOREIGN KEY ("file_id") REFERENCES "files_with_deleted" ("id");
 
 -- ================================== 
 --          TABLE RECIPES
@@ -153,30 +178,7 @@ SELECT * FROM recipe_files_with_deleted WHERE deleted_at IS NULL;
 
  -- FOREIGN KEYS
 ALTER TABLE "recipe_files_with_deleted" ADD FOREIGN KEY ("recipe_id") REFERENCES "recipes_with_deleted" ("id");
-
--- ================================== 
---        TABLE FILES
--- ==================================
-
--- CREATE TABLE FILES (COMPLETE TABLE WITH AND WITHOUT DELETED FILES)
-CREATE TABLE "files_with_deleted" (
-  "id" SERIAL PRIMARY KEY,
-  "name" text NOT NULL,
-  "path" text NOT NULL,
-  "created_at" timestamp DEFAULT (now()),
-  "updated_at" timestamp DEFAULT (now()),
-  "deleted_at" timestamp
-);
-
--- AUTO UPDATE AT FILES (COMPLETE TABLE WITH AND WITHOUT DELETED FILES)
-CREATE TRIGGER set_timestamp
-BEFORE UPDATE ON files_with_deleted
-FOR EACH ROW
-EXECUTE PROCEDURE trigger_set_timestamp();
-
-  -- CREATE VIEW (RECIPE FILES) WITHOUT DELETED RECIPE FILES
-CREATE VIEW files AS
-SELECT * FROM files_with_deleted WHERE deleted_at IS NULL;
+ALTER TABLE "recipe_files_with_deleted" ADD FOREIGN KEY ("file_id") REFERENCES "files_with_deleted" ("id");
 
 -- ================================== 
 --        TABLE ORDERS
