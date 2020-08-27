@@ -101,6 +101,13 @@ const Base = {
         } catch (error) {
             console.error(error)
         }
+    },
+    async findLatestWithLimit(orderBy, limit) {
+        const query = `SELECT * FROM ${this.table} ORDER BY ${orderBy} DESC LIMIT ${limit}`
+
+        const results = await db.query(query)
+
+        return results.rows
     }
 }
 

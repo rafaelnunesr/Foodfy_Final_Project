@@ -1,5 +1,7 @@
-<div class="recipe">
-    <img src="assets/burger.png" alt="Foto de hambuger">
-    <h2>Triplo bacon burger</h2>
-    <p>Por Jorge Triaplo</p>
-</div>
+{% for recipe in recipes %}
+    <div class="recipe">
+        <img src="{{recipe.path}}" alt="Foto de {{recipe.img}}">
+        <h2>{{recipe.name}}</h2>
+        <p>Por {{recipe.profile_name}}</p>
+    </div>
+{% endfor %}

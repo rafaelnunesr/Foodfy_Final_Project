@@ -1,5 +1,9 @@
 const Users = require('../models/Users')
 const Chefs = require('../models/Chefs')
+const Recipes = require('../models/Recipes')
+const RecipesFiles = require('../models/RecipeFiles')
+const Files = require('../models/Files')
+
 
 module.exports = {
     async create (req, res) {
@@ -48,11 +52,44 @@ module.exports = {
     delete (req, res) {
 
     },
-    show(req, res) {
+    async index(req, res) {
         try {
-            return res.render('recipes/show')
+            let lastSixRecipes = await Recipes.findLatestWithLimit('id', 6)
+
+            for (recipeIndex in lastSixRecipes){
+
+                let profile_name = ''
+                const recipe = lastSixRecipes[recipeIndex]
+
+                if(recipe.chef_id){
+                    const chef = await Chefs.findOne({ where: {id: recipe.chef_id} })
+                    profile_name = chef.name
+                }
+                else if(recipe.user_id) {
+                    const user = await Users.findOne({ where: {id: recipe.user_id} })
+                    profile_name = user.name
+                }
+
+                lastSixRecipes[recipeIndex].profile_name = profile_name
+
+                const fileId = await RecipesFiles.findOne({ where: { recipe_id: recipe.id } })
+
+                const path = await Files.findOne({ where: { id: fileId } })
+                console.log(path)
+            }
+            
+            return res.render('index', { recipes: lastSixRecipes })
+
         } catch (error) {
-            console.error('recipes/show')
+            console.error(error)
+        }
+    },
+    async show(req, res) {
+        try {
+            
+
+        } catch (error) {
+            console.error(error)
         }
     }
 }

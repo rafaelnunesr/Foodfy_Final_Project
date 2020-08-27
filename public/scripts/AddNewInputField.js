@@ -26,7 +26,7 @@ const AddNewInputField = {
             const fields = {
                 inputName: 'ingredients',
                 placeholder: 'Adicione um novo ingrediente',
-                parentDivClass: '.ingredients-fields'
+                parentDivClass: '.ingredients'
             }
             createNewInput(fields)
         }
