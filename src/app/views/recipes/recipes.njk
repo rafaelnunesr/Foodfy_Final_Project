@@ -1,18 +1,13 @@
-{% extends '../admin/layout.njk' %}
-
-{% import '../parts/creation-card.njk' as card %}
+{% extends '../layout.njk' %}
 
 {% block header %}
-    <title>Foodfy | Receitas</title>
 {% endblock %}
 
 {% block content %}
-    <form action='' method='POST'>
-        {% call card.render({ 
-            'title': 'Criando receita', 
-            'buttonSave': 'Salvar receita'
-        }) %}
-            {% include './parts/fields.njk' %} 
-        {% endcall %}
-    </form>
+    <main>
+        <div class="main-recipes">
+            {% include './parts/recipe.njk' %}
+        </div>
+    </main>
+    {% include '../parts/pagination.njk' %}
 {% endblock %}

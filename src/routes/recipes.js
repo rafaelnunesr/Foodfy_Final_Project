@@ -19,6 +19,6 @@ routes.get('/admin/recipes/:id', onlyUsers, RecipeController.show)
 // PUBLIC
 routes.get('/', RecipeController.index)
       .get('/recipes/:id', RecipeController.show)
-      .get('/recipes', RecipeController.show)
+      .get('/recipes', RecipeController.showRecipes)
 
 module.exports = routes

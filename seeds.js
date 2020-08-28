@@ -158,7 +158,7 @@ async function createRecipesForUsers() {
 
                 for(let i = 1; i < photosQuantity; i++){
 
-                    const fileId = await createFiles(recipeName, `public/img/recipes/recipe_default_0${i}`)
+                    const fileId = await createFiles(recipeName, `public/img/recipes/recipe_default_0${i}.png`)
 
                     await RecipeFiles.create({
 
@@ -201,7 +201,7 @@ async function createRecipesForChefs() {
 
                 for(let i = 1; i < photosQuantity; i++){
 
-                    const fileId = await createFiles(recipeName, `public/img/recipes/recipe_default_0${i}`)
+                    const fileId = await createFiles(recipeName, `public/img/recipes/recipe_default_0${i}.png`)
 
                     await RecipeFiles.create({
 

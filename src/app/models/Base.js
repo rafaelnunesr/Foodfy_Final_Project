@@ -108,6 +108,34 @@ const Base = {
         const results = await db.query(query)
 
         return results.rows
+    },
+    paginate(params) {
+        const { filter, limit, offset } = params
+
+        let query = '',
+        filterQuery = '',
+        totalQuery = `(
+            SELECT count(*) FROM ${this.table}
+        ) AS total`
+
+        if(filter) {
+            filterQuery = `
+                WHERE ${this.table}.name ILIKE '%${filter}%'
+            `
+            totalQuery = `(
+                SELECT count(*) FROM ${this.table}
+                ${filterQuery}
+            )AS total`
+        }
+
+        query = `
+            SELECT *, ${totalQuery}
+            FROM ${this.table}
+            ${filterQuery}
+            ORDER BY ${this.table}.updated_at DESC
+            LIMIT $1 OFFSET $2`
+
+        return db.query(query, [limit, offset])
     }
 }
 
